@@ -1,0 +1,180 @@
+{
+  "name": "Ice-Breaking Session",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "labelIds": [
+            "INBOX"
+          ],
+          "q": "-from:me",
+          "readStatus": "unread"
+        },
+        "options": {}
+      },
+      "id": "bfabd38e-37f8-4658-b8a5-d346b26003f7",
+      "name": "New Incoming Email",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "4UbH96FvRvhM4rhw",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ ($json.from?.value?.[0]?.address ?? \"\").trim().toLowerCase() }}",
+              "rightValue": "bsce22042@itu.edu.pk",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "id": "26325b20-ac04-4226-a2f9-f6102c063cff"
+            },
+            {
+              "leftValue": "={{ ($json.subject ?? \"\") + \" \" + ($json.text ?? \"\") + \" \" + ($json.html ?? \"\") }}",
+              "rightValue": "KHIZRU",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              },
+              "id": "482eee9a-2437-466d-b408-223465249803"
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "id": "1c1b2359-918f-4631-aef6-cf1972f001aa",
+      "name": "Contains KHIZRU?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        224,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $json.id }}",
+        "emailType": "text",
+        "message": "HI KHIZRU HERE",
+        "options": {
+          "appendAttribution": false,
+          "replyToSenderOnly": true
+        }
+      },
+      "id": "d85264df-a83d-44ee-93f2-919dc1bd9a19",
+      "name": "Reply to Sender",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        0
+      ],
+      "webhookId": "d7c232f0-36f8-4839-83b7-fe80af1dd28a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "4UbH96FvRvhM4rhw",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "markAsRead",
+        "messageId": "={{ $('New Incoming Email').item.json.id }}"
+      },
+      "id": "4834999f-b1ca-4011-bed4-1fd855aef377",
+      "name": "Mark Email as Read",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        0
+      ],
+      "webhookId": "8b254014-b1d6-4a85-9e3c-d1f5463ea624",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "4UbH96FvRvhM4rhw",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "New Incoming Email": {
+      "main": [
+        [
+          {
+            "node": "Contains KHIZRU?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contains KHIZRU?": {
+      "main": [
+        [
+          {
+            "node": "Reply to Sender",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply to Sender": {
+      "main": [
+        [
+          {
+            "node": "Mark Email as Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "cb89a883-537a-4b0f-ba88-594db90fbdfb",
+  "meta": {
+    "instanceId": "98552272642580c1e45bf02a3f5917eea4407f385084c33fc4ecd6b14c2d65fd"
+  },
+  "nodeGroups": [],
+  "id": "o5NgAd4dBunivsR1",
+  "tags": []
+}

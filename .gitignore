@@ -1,0 +1,14 @@
+# Node modules
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+
+# n8n local data (do not commit actual instance data)
+.n8n/
