@@ -1,188 +1,178 @@
-<p align="center">
-  <img src="https://img.shields.io/badge/n8n-Workflow%20Automation-FF6D5A?style=for-the-badge&logo=n8n&logoColor=white" />
-  <img src="https://img.shields.io/badge/Docker-Self--Hosted-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
-  <img src="https://img.shields.io/badge/Gmail-API%20Integration-EA4335?style=for-the-badge&logo=gmail&logoColor=white" />
-  <img src="https://img.shields.io/badge/OAuth2-Authenticated-4285F4?style=for-the-badge&logo=google&logoColor=white" />
-</p>
+# 🚀 Automated Gmail Auto-Responder (n8n)
 
-# 🚀 Automated Gmail Auto-Responder — n8n Workflow
+> **End-to-end workflow automation project** that monitors a Gmail inbox for keyword-triggered emails and sends automated threaded replies using n8n — deployed on both Cloud and a self-hosted Docker environment.
 
-> **A production-ready, keyword-triggered email auto-responder** built with n8n, deployed on both **n8n Cloud** and a **self-hosted Docker environment** to demonstrate full-stack automation capabilities.
+[![n8n](https://img.shields.io/badge/n8n-Workflow%20Automation-FF6D5A.svg)](https://n8n.io/)
+[![Docker](https://img.shields.io/badge/Docker-Self--Hosted-2496ED.svg)](https://www.docker.com/)
+[![Gmail API](https://img.shields.io/badge/Gmail-API%20Integration-EA4335.svg)](https://developers.google.com/gmail/api)
 
 ---
 
-## 📌 Project Overview
+## 🎯 Project Overview
 
-This project implements a fully automated email auto-responder using **[n8n](https://n8n.io/)** — an open-source workflow automation tool. The system continuously monitors a Gmail inbox for new messages. When an incoming email contains the keyword **"KHIZRU"**, the workflow:
+This project solves a practical automation challenge: **automatically replying to specific emails** without manual intervention. Using n8n's visual workflow editor, I built an event-driven pipeline that:
 
-1. ✅ **Detects** the keyword in the email body or subject (case-insensitive)
-2. ✉️ **Replies** to the sender in the same thread with `"HI KHIZRU HERE"`
-3. 📬 **Marks** the original email as read to prevent re-processing and infinite loops
+- Monitors a Gmail inbox every minute for new, unread messages
+- Filters incoming emails for a specific keyword (**"KHIZRU"**) using case-insensitive matching
+- Sends an automatic threaded reply (`"HI KHIZRU HERE"`) back to the sender
+- Marks the processed email as read to prevent infinite re-processing loops
 
-To showcase versatility across deployment environments, the workflow was:
-- **Prototyped & tested** on [n8n Cloud](https://app.n8n.cloud) using the built-in AI Assistant
-- **Migrated & deployed** to a local self-hosted Docker instance
+**Key Highlight:** The workflow was first prototyped on **n8n Cloud** (using the AI Assistant), then successfully migrated and deployed to a **local self-hosted Docker instance** to demonstrate cloud-to-self-hosted portability.
 
 ---
 
-## ⚙️ Workflow Architecture
-
-The automation pipeline consists of **four sequential nodes**:
+## 🏗️ Workflow Architecture
 
 ```
-┌──────────────────┐    ┌───────────────────┐    ┌──────────────────┐    ┌─────────────────────┐
-│  Gmail Trigger   │───▶│  Filter: Contains │───▶│  Gmail: Reply    │───▶│  Gmail: Mark as     │
-│  (Every Minute)  │    │  "KHIZRU"?        │    │  to Sender       │    │  Read               │
-└──────────────────┘    └───────────────────┘    └──────────────────┘    └─────────────────────┘
+Gmail Trigger ──► Filter: Contains "KHIZRU"? ──► Gmail: Reply to Sender ──► Gmail: Mark as Read
+(Every Minute)         (If Node)                  (Threaded Reply)           (Prevent Re-trigger)
 ```
 
 | Node | Type | Description |
-|------|------|-------------|
-| **New Incoming Email** | `Gmail Trigger` | Polls the inbox every minute for new, unread emails (excludes self-sent messages) |
-| **Contains KHIZRU?** | `If` (Filter) | Evaluates whether the email body/subject contains `"KHIZRU"` (case-insensitive) |
-| **Reply to Sender** | `Gmail` (Reply) | Sends a threaded reply with the message `"HI KHIZRU HERE"` |
-| **Mark Email as Read** | `Gmail` (Mark as Read) | Marks the processed email as read to prevent the trigger from re-processing it |
+| :--- | :--- | :--- |
+| **New Incoming Email** | Gmail Trigger | Polls inbox every minute for new, unread emails (excludes self-sent) |
+| **Contains KHIZRU?** | If (Filter) | Checks if email body/subject contains "KHIZRU" (case-insensitive) |
+| **Reply to Sender** | Gmail (Reply) | Sends a threaded reply with `"HI KHIZRU HERE"` |
+| **Mark Email as Read** | Gmail (Mark as Read) | Marks the email as read so it won't be picked up again |
 
 ---
 
-## 📸 Proof of Concept
+## 🛠️ Tech Stack
 
-### n8n Cloud — Workflow Canvas
-> The workflow running on n8n Cloud at `n8n-mkhizar.app.n8n.cloud`, showing all four nodes in the published state.
-
-![n8n Cloud Workflow Canvas](Results/Cloud/Web.png)
-
----
-
-### Self-Hosted Docker — Workflow Canvas
-> The same workflow imported and running on a local Docker instance at `localhost:5678`.
-
-![Docker Self-Hosted Workflow Canvas](Results/Docker/Image.png)
+| Category | Technologies |
+| :--- | :--- |
+| **Workflow Automation** | n8n (Visual Node-Based Editor) |
+| **Cloud Platform** | n8n Cloud (Prototyping & Testing) |
+| **Containerization** | Docker (Self-Hosted Deployment) |
+| **API Integration** | Gmail API, OAuth 2.0 |
+| **Version Control** | Git, GitHub |
 
 ---
 
-### Gmail — Test Email (Sender's View)
-> The sender's Gmail inbox showing the original email with the keyword `"KHIZRU"` sent from an ITU email address (`bsce22042@itu.edu.pk`), and the automated reply `"HI KHIZRU HERE"` received instantly.
+## 🚀 How to Run This Project
 
-![Gmail Test - Sender View](Results/Test_Sender.png)
+### Prerequisites
+- Docker installed
+- A Google account with Gmail API access
 
----
+### 1. Clone the Repository
+```bash
+git clone https://github.com/KhizarNaveed/Ice-Breaking-N8N.git
+cd Ice-Breaking-N8N
+```
 
-### Gmail — Test Email (Receiver's View)
-> The receiver's Gmail inbox confirming the threaded reply `"HI KHIZRU HERE"` was delivered successfully and automatically.
-
-![Gmail Test - Reply View](Results/Test_Reply.png)
-
----
-
-## 🛠️ Step-by-Step Setup & Deployment
-
-### Part 1: Prototyping on n8n Cloud
-
-1. Created a free trial account on [n8n Cloud](https://app.n8n.cloud).
-2. Utilized the **n8n AI Assistant** to generate the initial workflow structure using a natural language prompt.
-3. Connected **Gmail API** credentials via **OAuth2** to enable live trigger and reply functionality.
-4. Tested the workflow end-to-end by sending test emails containing the keyword.
-5. Exported the finalized workflow as a [`.json` file](Ice-Breaking%20Session.json) for version control and portability.
-
-### Part 2: Self-Hosting Locally via Docker
-
-To demonstrate self-hosting capabilities, the exported workflow was deployed on a local Docker environment.
-
-**1. Pull the n8n Docker Image:**
+### 2. Pull the n8n Docker Image
 ```bash
 docker pull n8nio/n8n
 ```
 
-**2. Start the n8n Container:**
+### 3. Start the n8n Container
 ```bash
 docker run -d --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n n8nio/n8n
 ```
-> This runs n8n in the background, maps port `5678`, and creates a persistent Docker volume (`n8n_data`) to ensure workflows and credentials survive container restarts.
+This will:
+- Run n8n in the background on port `5678`
+- Create a persistent Docker volume (`n8n_data`) so workflows survive container restarts
 
-**3. Access the Local Instance:**
-```
-http://localhost:5678
-```
+### 4. Access the n8n Editor
+Open your browser and go to: [http://localhost:5678](http://localhost:5678)
 
-**4. Import the Workflow:**
-In the local n8n editor, use **Import from File** to load the [`Ice-Breaking Session.json`](Ice-Breaking%20Session.json) workflow.
+### 5. Import the Workflow
+In the n8n editor, use **Import from File** and load `Ice-Breaking Session.json` from this repository.
 
-**5. Reconnect Credentials:**
-Since n8n does not export sensitive API keys for security, Gmail OAuth2 credentials must be manually reconnected to all three Gmail nodes on the local instance.
+### 6. Reconnect Gmail Credentials
+Since n8n does not export API keys for security, you must manually reconnect Gmail OAuth2 credentials to all three Gmail nodes.
 
 ---
 
 ## 🐳 Docker Commands Cheat Sheet
 
 | Action | Command |
-|--------|---------|
+| :--- | :--- |
 | **Pull the image** | `docker pull n8nio/n8n` |
 | **Create & start container** | `docker run -d --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n n8nio/n8n` |
 | **Stop the container** | `docker stop n8n` |
 | **Start existing container** | `docker start n8n` |
 | **View running containers** | `docker ps` |
 | **View all containers** | `docker ps -a` |
-| **View container logs** | `docker logs n8n` |
-| **Remove the container** | `docker rm n8n` |
 
 > **💡 Tip:** If you get a *"name is already in use"* error, the container already exists. Use `docker start n8n` instead of `docker run`.
 
 ---
 
-## 📂 Repository Structure
+## 📸 Screenshots & Proof of Concept
+
+### n8n Cloud — Workflow Canvas
+> The workflow running on n8n Cloud, showing all four nodes in the published state.
+
+![n8n Cloud Workflow](Results/Cloud/Web.png)
+
+### Self-Hosted Docker — Workflow Canvas
+> The same workflow imported and running on a local Docker instance at `localhost:5678`.
+
+![Docker Self-Hosted Workflow](Results/Docker/Image.png)
+
+### Gmail — Test Email (Sender's View)
+> The sender's Gmail inbox showing the original email with keyword "KHIZRU" and the automated reply received instantly.
+
+![Gmail Sender View](Results/Test_Sender.png)
+
+### Gmail — Test Email (Receiver's View)
+> The receiver's Gmail inbox confirming the threaded auto-reply `"HI KHIZRU HERE"` was delivered successfully.
+
+![Gmail Reply View](Results/Test_Reply.png)
+
+---
+
+## 🏗️ Project Architecture
 
 ```
-Ice-Breaking-N8N/
-├── README.md                        # This file
-├── Ice-Breaking Session.json        # Exported n8n workflow (importable)
-└── Results/
-    ├── Cloud/
-    │   └── Web.png                  # Screenshot: n8n Cloud workflow canvas
-    ├── Docker/
-    │   └── Image.png                # Screenshot: Self-hosted Docker workflow canvas
-    ├── Test_Sender.png              # Screenshot: Sender's Gmail view
-    └── Test_Reply.png               # Screenshot: Receiver's Gmail view (auto-reply)
+├── Ice-Breaking Session.json   # Exported n8n workflow (importable)
+├── Results/
+│   ├── Cloud/
+│   │   └── Web.png             # Screenshot: n8n Cloud workflow canvas
+│   ├── Docker/
+│   │   └── Image.png           # Screenshot: Self-hosted Docker workflow
+│   ├── Test_Sender.png         # Screenshot: Sender's Gmail view
+│   └── Test_Reply.png          # Screenshot: Auto-reply confirmation
+└── README.md                   # Project documentation
 ```
 
 ---
 
-## 💡 Key Learnings & Skills Demonstrated
+## 💡 Key Learnings
 
-| Skill | Description |
-|-------|-------------|
-| **Low-Code Automation** | Designed a node-based workflow using n8n's visual editor |
-| **AI-Assisted Development** | Leveraged n8n's built-in AI Assistant for rapid prototyping |
-| **API & OAuth2 Integration** | Authenticated and integrated Google Workspace (Gmail) APIs |
-| **Cloud-to-Self-Hosted Migration** | Exported a cloud workflow and redeployed it in a local Docker environment |
-| **Docker & Containerization** | Managed containerized services with persistent volumes |
-| **Security Best Practices** | Handled credential re-linking post-migration; understood OAuth token management |
-| **Version Control** | Maintained workflow JSON and documentation in a Git repository |
+- **Low-Code Automation:** Designed a node-based workflow using n8n's visual editor
+- **AI-Assisted Development:** Leveraged n8n's built-in AI Assistant for rapid prototyping
+- **API & OAuth2 Integration:** Authenticated and integrated Google Workspace (Gmail) APIs
+- **Cloud-to-Self-Hosted Migration:** Exported a cloud workflow and redeployed it in a local Docker environment
+- **Docker & Containerization:** Managed containerized services with persistent data volumes
+- **Security Best Practices:** Handled credential re-linking post-migration; understood OAuth token isolation
 
 ---
 
-## 🧰 Tech Stack
+## 🔧 Future Improvements
 
-<p align="center">
-  <img src="https://img.shields.io/badge/n8n-FF6D5A?style=flat-square&logo=n8n&logoColor=white" />
-  <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white" />
-  <img src="https://img.shields.io/badge/Gmail_API-EA4335?style=flat-square&logo=gmail&logoColor=white" />
-  <img src="https://img.shields.io/badge/OAuth_2.0-4285F4?style=flat-square&logo=google&logoColor=white" />
-  <img src="https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white" />
-  <img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white" />
-</p>
+- [ ] Add more keyword filters for multi-response automation
+- [ ] Implement Slack/Discord notifications alongside email replies
+- [ ] Deploy on a cloud VM (AWS EC2 / GCP) for 24/7 uptime
+- [ ] Add error-handling nodes for failed Gmail API calls
+- [ ] Integrate with a database to log all processed emails
 
 ---
 
-## 👤 Author
+## 📬 Connect with Me
 
-**Muhammad Khizar Naveed**  
-🎓 BS Computer Engineering — Information Technology University (ITU), Lahore  
-📧 [bsce22042@itu.edu.pk](mailto:bsce22042@itu.edu.pk)  
-🔗 [GitHub — @KhizarNaveed](https://github.com/KhizarNaveed)
+- **LinkedIn**: [Muhammad Khizar Naveed](https://www.linkedin.com/in/muhammad-khizar-naveed-1767312b2/)
+- **GitHub**: [KhizarNaveed](https://github.com/KhizarNaveed)
+- **Email**: m.khizarnaveed2004@gmail.com
+
+## 🙏 Acknowledgments
+
+- [n8n](https://n8n.io/) — Open-source workflow automation tool
+- [Docker](https://www.docker.com/) — Containerization platform
+- [Google Gmail API](https://developers.google.com/gmail/api) — Email integration
 
 ---
 
-<p align="center">
-  <i>⭐ If you found this project helpful, consider giving it a star!</i>
-</p>
+**⭐ If you found this project useful, please consider giving it a star!**
